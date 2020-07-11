@@ -29,7 +29,7 @@ public class FileFilter {
         List<String> names = new ArrayList<>();
         Files.walkFileTree(rootDirectory, new SimpleFileVisitor<Path>() {
             @Override
-            public FileVisitResult preVisitDirectory(Path file, BasicFileAttributes attrs) throws IOException {
+            public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
                 if (file.getFileName().toString().endsWith(extension)) {
                     names.add(file.getFileName().toString());
                 }
