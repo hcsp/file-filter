@@ -5,9 +5,6 @@ import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
-import java.util.function.Consumer;
-import java.util.function.Predicate;
 
 public class FileFilter {
     public static void main(String[] args) throws IOException {
@@ -36,7 +33,7 @@ public class FileFilter {
             @Override
             public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) {
                 String fileName = file.getFileName().toString();
-                if(fileName.endsWith(extension)) {
+                if (fileName.endsWith(extension)) {
                     result.add(fileName);
                 }
                 return FileVisitResult.CONTINUE;
