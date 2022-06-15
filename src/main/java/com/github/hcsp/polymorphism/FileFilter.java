@@ -26,27 +26,17 @@ public class FileFilter {
      * @return 所有该文件夹（及其后代子文件夹中）匹配指定扩展名的文件的名字
      */
     public static List<String> filter(Path rootDirectory, String extension) throws IOException {
-        FileFilterVisitor visitor = new FileFilterVisitor(extension);
-        Files.walkFileTree(rootDirectory, visitor);
-        return visitor.getFilteredNames();
-    }
-
-    private static class FileFilterVisitor extends SimpleFileVisitor<Path> {
-        private final String extension;
-        private final List<String> filteredNames = new ArrayList<>();
-        public List<String> getFilteredNames() {
-            return filteredNames;
-        }
-        public FileFilterVisitor(String extension) {
-            this.extension = extension;
-        }
-        @Override
-        public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
-            String fileName = file.getFileName().toString();
-            if (fileName.endsWith(extension)) {
-                filteredNames.add(fileName);
+        List<String> filteredNames = new ArrayList<>();
+        Files.walkFileTree(rootDirectory, new SimpleFileVisitor<Path>(){
+            @Override
+            public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+                String fileName = file.getFileName().toString();
+                if (fileName.endsWith(extension)) {
+                    filteredNames.add(fileName);
+                }
+                return FileVisitResult.CONTINUE;
             }
-            return FileVisitResult.CONTINUE;
-        }
+        });
+        return filteredNames;
     }
 }
