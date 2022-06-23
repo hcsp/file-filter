@@ -3,6 +3,7 @@ package com.github.hcsp.polymorphism;
 import java.io.IOException;
 import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.util.ArrayList;
 import java.util.List;
 
 public class FileFilter extends SimpleFileVisitor {
@@ -31,8 +32,16 @@ public class FileFilter extends SimpleFileVisitor {
      * @return 所有该文件夹（及其后代子文件夹中）匹配指定扩展名的文件的名字
      */
     public static List<String> filter(Path rootDirectory, String extension) throws IOException {
-        FileFilterVisitor visitor = new FileFilterVisitor(extension);
-        Files.walkFileTree(rootDirectory, visitor);
-        return visitor.getResults();
+        List<String> names = new ArrayList<>();
+        Files.walkFileTree(rootDirectory, new SimpleFileVisitor<Path>(){
+            @Override
+            public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+                if(file.getFileName().toString().endsWith(extension)){
+                    names.add(file.getFileName().toString());
+                }
+                return FileVisitResult.CONTINUE;
+            }
+        });
+        return names;
     }
 }
